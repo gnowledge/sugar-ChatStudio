@@ -1,0 +1,8 @@
+[Activity]
+name      = ChatStudioSelf
+summary   = Text chat game with computer
+license   = GPLv2+
+icon      = activity-icon
+exec      = sugar-activity activity.ChatStudioSelf
+activity_version = 78
+bundle_id = org.laptop.ChatStudioSelf

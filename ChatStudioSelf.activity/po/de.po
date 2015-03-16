@@ -1,0 +1,240 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the PACKAGE package.
+# Fabian Affolter <fab@fedoraproject.org>, 2007.
+# Markus Schlager <m.slg@gmx.de>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: chat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-09-27 14:55-0400\n"
+"PO-Revision-Date: 2012-10-08 20:41+0200\n"
+"Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
+"Language-Team: Deutsche OLPC-Lokalisierung\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.0\n"
+"X-Poedit-Language: German\n"
+
+#. TRANS: "name" option from activity.info file
+msgid "Chat"
+msgstr "Chat"
+
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid "Text chat"
+msgstr "Text-Chat"
+
+#: activity.py:87
+msgid "Insert smiley"
+msgstr "Smiley einfügen"
+
+#: activity.py:124 activity.py:188
+msgid "Off-line"
+msgstr "Offline"
+
+#: activity.py:124
+msgid "Share, or invite someone."
+msgstr "Freigeben oder jemand einladen"
+
+#: activity.py:180 activity.py:195
+msgid "On-line"
+msgstr "Online"
+
+#: activity.py:180
+msgid "Private Chat"
+msgstr "Privater Chat"
+
+#: activity.py:188 activity.py:248
+msgid "left the chat"
+msgstr "hat den Chat verlassen"
+
+#: activity.py:195
+msgid "Connected"
+msgstr "Verbunden"
+
+#: activity.py:240
+msgid "joined the chat"
+msgstr "nimmt am Chat teil"
+
+#: activity.py:255
+msgid "is here"
+msgstr "ist hier"
+
+#: chat/box.py:118
+msgid "URL from Chat"
+msgstr "URL des Chat"
+
+#: chat/box.py:459
+msgid "Copy to Clipboard"
+msgstr "In Zwischenablage kopieren"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-) and :)
+#: chat/smilies.py:31
+msgid "Smile"
+msgstr "Lächeln"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are ;-) and ;)
+#: chat/smilies.py:34
+msgid "Winking"
+msgstr "Augenzwinkernd"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-/ and :/
+#: chat/smilies.py:37
+msgid "Confused"
+msgstr "Verwirrt"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-( and :(
+#: chat/smilies.py:40
+msgid "Sad"
+msgstr "Traurig"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-D and :D
+#: chat/smilies.py:43
+msgid "Grin"
+msgstr "Grinsen"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-| and :|
+#: chat/smilies.py:46
+msgid "Neutral"
+msgstr "Neutral"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-O, :O, =-O and =O
+#: chat/smilies.py:49
+msgid "Shock"
+msgstr "Schockiert"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are B-), B), 8-) and 8)
+#: chat/smilies.py:52
+msgid "Cool"
+msgstr "Lässig"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-P and :P
+#: chat/smilies.py:55
+msgid "Tongue"
+msgstr "Zunge herausgestreckt"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :">
+#: chat/smilies.py:58
+msgid "Blushing"
+msgstr "Errötend"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :'-( and :'(
+#: chat/smilies.py:61
+msgid "Weeping"
+msgstr "Weinend"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are O-), O), O:-) and O:)
+#: chat/smilies.py:64
+msgid "Angel"
+msgstr "Engel"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-$ and :-$
+#: chat/smilies.py:67
+msgid "Don't tell anyone"
+msgstr "Sag's keinem"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are x-(, x(, X-( and x-(
+#: chat/smilies.py:70
+msgid "Angry"
+msgstr "Verärgert"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are >:> and >:)
+#: chat/smilies.py:73
+msgid "Devil"
+msgstr "Teufel"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-B, :B
+#: chat/smilies.py:76
+msgid "Nerd"
+msgstr "Nerd"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-*, :*
+#: chat/smilies.py:79
+msgid "Kiss"
+msgstr "Kuss"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :))
+#: chat/smilies.py:82
+msgid "Laughing"
+msgstr "Lachend"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are I-)
+#: chat/smilies.py:85
+msgid "Sleepy"
+msgstr "Schläfrig"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are :-&
+#: chat/smilies.py:88
+msgid "Sick"
+msgstr "Krank"
+
+#. TRANS: A smiley (http://en.wikipedia.org/wiki/Smiley) explanation
+#. TRANS: ASCII-art equivalents are /:)
+#: chat/smilies.py:91
+msgid "Raised eyebrows"
+msgstr "Hochgezogene Augenbrauen"
+
+#, python-format
+#~ msgid "%s Source"
+#~ msgstr "%s Quelle"
+
+#~ msgid "Connecting"
+#~ msgstr "Verbinden"

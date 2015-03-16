@@ -1,0 +1,264 @@
+78
+
+* Replace cjson with json #3142
+* Update translations
+
+77
+
+* Fix issue of not packaging .mo translation files
+* Chat text lines offset on screen lower than username #3634
+* Update translations
+
+76
+
+* Support "Write to Journal Anytime" feature in Sugar 0.86
+
+75
+
+* Scroll the chat log #2782 (Manuel Kaufmann)
+* Don't treat the whole word as an URL (Manuel Kaufmann)
+* Update translations
+
+74
+
+* Remove use of hippo (Gonzalo Odiard)
+* Update translations
+
+73
+
+* Return langs back by generating locale/ directory
+
+72
+
+* Update translations
+
+71
+
+* Chat i18n enhancement #2903 (Chris Leonard)
+* Remove the KeepButton due to deprecation (Simon Schampijer)
+* Fix View Source behaviour
+* Update i18n
+
+70
+
+* Support gtk<2.18, eg, fc11
+* Make smilies sensitive only in online mode
+* After choosing a smyle, focus entry widget
+* Update translations for de
+
+69
+
+* Add chat smilies (Mukesh Gupta)
+* Update translations for en_US
+
+68
+
+* Update translations for de and ta
+
+67
+
+* Remove access to a private member (Tomeu Vizoso)
+* Update translations for hi, nl
+
+66
+
+* Utilize new toolbars design
+* Add new translations: mg, sq, ta
+
+65
+
+* Support new activity.info exec parameter (alsroot)
+* #402: "share or invite" hint even on resume of shared instance (alsroot)
+
+46
+
+* Version bump to allow for stable releases after v48
+* #8772: Fix journal entry creation in Chat for uri-list (kevix)
+* #8471: Allow resuming Chat log in Write (morgs)
+* #8411: Add license to activity.info (morgs)
+* Remove parameter from bundlebuilder.start (morgs)
+* Add update_url for software updater (morgs)
+
+45
+
+* Updated translations: sl, nb, el, mr, rw, ur, ne
+* Fixed MANIFEST to include all translations (morgs)
+
+44
+
+* #7633: Close the text channel when stopping a 1-1 chat (morgs)
+* #7717: Log incoming messages (morgs)
+* #7692: Don't show pending messages when joining a chat (morgs)
+* Updated translations: nl, te, es, mn
+
+43
+
+* Updated translations: zh_TW, ja
+
+42
+
+* #6036: Show timestamp as elapsed time instead of date (morgs)
+* Updated translations: fr, mvo, pis, af, sd, pap, tpi, ar, de
+
+41
+
+* Updated translations: mr, de, ht, km, es, it
+* #6036: Add separator after old chat history (morgs)
+* #6298: Implement 1-1 private chat with non Sugar Jabber clients (morgs)
+
+40
+
+#5767: Use black text on light fill colors (matthias)
+
+39
+
+* ACK received messages (cassidy)
+* Handle pending messages when setting the message handler (cassidy)
+
+38
+
+* Updated translations: zh_TW, de, it
+
+37
+
+* UI Change: Merge multiple sequential messages from same author (morgs)
+* Updated translation: ar (pootle)
+* #6561: Fix RTL message alignment (Arabic) (khaled)
+
+36
+
+* #5053: Reduce white space around boxes (morgs)
+* #6621: set entry sensitive not editable (morgs)
+* Add license to activity.py (morgs)
+* #6743: border around gtk.entry (morgs)
+* Reduce telepathy code based on improved PS channel creation API (morgs)
+* Open URLs via show_object_in_journal (morgs)
+* Update pippy metadata based on Pippy (morgs)
+* Updated translations (pootle)
+
+35
+
+* #6066: Make web links copied to clipboard, pasteable in Write, Browse,
+  Terminal (morgs)
+* Added AUTHORS, COPYING (morgs)
+* Updated translations (pootle)
+
+34
+
+* Updated translations: ur, bn (pootle)
+* #2351: Scrolling fixed (marcopg)
+
+33
+
+
+32
+
+* #5542: Repackaged as a Pippy application. (cscott)
+
+31
+
+* Updated translations: fa, is (pootle)
+* #5080: Copy to clipboard with targets (morgs)
+
+30
+
+* Updated translations: es, fr, ne, pt, ro, ru, ur (pootle)
+* #5160: Chat should not autoscroll while you scroll up (morgs)
+
+29
+
+* #5080: add a "copy to clipboard" palette for URL's (cassidy)
+* Updated translations: fr, es, el, de, ar, zh_TW, it, nl, pt_BR (pootle)
+
+28
+
+* use NotifyAlert from sugar.graphics.alert instead of local
+  copy (thanks erikos!) (morgs)
+
+27
+
+* Use sugar.graphics.alert to show status info (morgs)
+* #4320: better URL handling and display (morgs)
+* #4331: Don't crash/ignore non-Sugar buddies (morgs)
+
+26
+
+* #4320 Better URL support (morgs)
+
+25
+
+* #3417 Resuming shows chat history (morgs)
+* self.set_title() considered harmful (morgs)
+* New UI look per Eben's mockups (morgs)
+
+24
+
+* #3556: Updated spanish translation (morgs)
+
+23
+
+* Updated spanish translation (morgs)
+
+22
+
+* Revert message dialog added by mistake. (marco)
+
+21
+
+* Add spanish translation (xavi)
+
+20
+
+* Update translation strings - genpot (morgs)
+* #3248 Make chat not shared by default (morgs)
+
+19
+
+* Added missing fill_color in icon (erikos)
+
+18
+
+* New activity icon, Fix for #2829 (erikos)
+
+16
+
+* Fix icon and roundbox changes in sugar (morgs)
+* Add greek translation (simosx)
+* Add arabic translation (khaled)
+
+15
+
+* Rename buddy icon (morgs)
+* Regen Chat.pot (danw)
+* French translation (marcopg)
+
+14
+
+* #2714 sugar.graphics cleanup (morgs)
+* #2578 German translation (morgs)
+
+13
+
+* Added gettext for i18n (morgs)
+
+12
+
+* #2347 Set initial focus on text entry (cassidy)
+
+11
+
+* #2356 Basic link support. (marco)
+
+10
+
+* Adapt to sugar API change (marco)
+
+9
+
+* Fix buddy handles for Salut (Link Local) channels (morgs)
+* Show status messages in different colour to text messages (morgs)
+
+8
+
+* Use room provided by PS instead of hardcoded global room (morgs)
+
