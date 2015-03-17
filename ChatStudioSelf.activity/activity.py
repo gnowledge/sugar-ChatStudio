@@ -81,7 +81,7 @@ class VisualScore(ToolButton):
 	 dates_list.append(date_det)
 	y_pos = np.arange(len(dates_list))
 	error = np.random.rand(len(dates_list))
-	plot_score_dgm.barh(y_pos, accuracy_list, xerr=error, align='center', alpha=0.4)
+	plot_score_dgm.barh(y_pos, accuracy_list, xerr=error, color = 'b', align='center')
 	plot_score_dgm.set_yticks(y_pos)
 	plot_score_dgm.set_yticklabels(dates_list)
 	score_canvas = FigureCanvas(score_chart_fig)  # a gtk.DrawingArea
@@ -119,7 +119,7 @@ class VisualTime(ToolButton):
 	 dates_list.append(date_det)
 	y_pos = np.arange(len(dates_list))
 	error = np.random.rand(len(dates_list))
-	plot_time_dgm.barh(y_pos, game_time_list, xerr=error, align='center', alpha=0.4)
+	plot_time_dgm.barh(y_pos, game_time_list, xerr=error, color = 'g', align='center')
 	plot_time_dgm.set_yticks(y_pos)
 	plot_time_dgm.set_yticklabels(dates_list)
 	time_canvas = FigureCanvas(time_chart_fig)  # a gtk.DrawingArea
@@ -134,32 +134,26 @@ class scoreWindow:
 	self.scorewindow.set_resizable(False)
 	self.scorewindow.set_title("Score card")
 	self.scorewindow.set_position(gtk.WIN_POS_CENTER)
-	self.vb = gtk.VBox()
-
+	self.vbox_as_parent = gtk.VBox()
+	self.hbox_for_text_content = gtk.HBox()
+	self.hbox_for_btns = gtk.HBox()
+	self.text_content = gtk.TextView()
 	line = ''  # Declare an empty string
 	self.gameover_msg = gtk.Label("Game Over\n")
         self.lalign = gtk.Alignment(0, 0, 0, 0)
-        self.label_result = gtk.Label("Rank\tAccuracy\t\tStart\t\tAdd\t\tMistakes\t\t\tSteps\t\tTime\t\tMode")
-
-        self.lalign.add(self.label_result)
-
-	self.vb.pack_start(self.gameover_msg, False, False, 0)
-        self.vb.pack_start(self.lalign, False, False, 0)
-	self.hb1 = gtk.HBox()
-	self.tv = gtk.TextView()
-	self.tv.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse('black'))
-	self.tv.set_editable(0)
-	self.tv.set_cursor_visible(0)
-	self.tv.set_left_margin(30)
-        textbuffer = self.tv.get_buffer()
-        self.tv.show()
+        self.top_label = gtk.Label("Rank\tAccuracy\t\tStart\t\tAdd\t\tMistakes\t\t\tSteps\t\tTime\t\tMode")
+	self.text_content.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse('black'))
+	self.text_content.set_editable(0)
+	self.text_content.set_cursor_visible(0)
+	self.text_content.set_left_margin(30)
+        textbuffer = self.text_content.get_buffer()
+        self.text_content.show()
 	global gameComplete
 	if (redirect_opt == 0):
-	 self.readscores(textbuffer, line)
+	 self.recent_ten_scores(textbuffer, line)
 	elif (redirect_opt == 1):
 	 if (gameComplete):
-	  self.readscores1(textbuffer, line)
-
+	  self.last_game_score_stats(textbuffer, line)
 	 else:
 	  line = 'Incomplete Game'
           textbuffer.set_text(line)
@@ -167,37 +161,40 @@ class scoreWindow:
 	 redirect_opt = 0
 	elif (redirect_opt == 2):
 	 if (gameComplete):
-	  self.readscores2(textbuffer, line)
+	  self.last_game_ans_list(textbuffer, line)
+	  self.top_label = gtk.Label("Compare Answers")
+	
 	 else:
 	  line = 'Incomplete Game'
           textbuffer.set_text(line)
 	 global redirect_opt
 	 redirect_opt = 0
-	self.hb1.pack_start(self.tv, fill=False)
-	self.hb2 = gtk.HBox()
-	self.b1 = gtk.Button("Check Last Game answer")
 
-	self.b2 = gtk.Button("Last Game Score")
-	self.b1.connect("clicked", self.chkans_card, self.scorewindow)
-	self.b2.connect("clicked", self.last_game_score, self.scorewindow)
-	self.hb2.pack_start(self.b1, fill=False)
-	self.hb2.pack_start(self.b2, fill=False)
-
-	self.vb.pack_start(self.hb1, fill=False)
-	self.vb.pack_start(self.hb2, fill=False)
+	self.hbox_for_text_content.pack_start(self.text_content, fill=False)
+	self.last_game_compare_ans_btn = gtk.Button("Check Last Game answer")
+	self.last_game_score_btn = gtk.Button("Last Game Score")
+	self.last_game_compare_ans_btn.connect("clicked", self.last_game_compare_ans_card, self.scorewindow)
+	self.last_game_score_btn.connect("clicked", self.last_game_score_card, self.scorewindow)
+	self.hbox_for_btns.pack_start(self.last_game_compare_ans_btn, fill=False)
+	self.hbox_for_btns.pack_start(self.last_game_score_btn, fill=False)
+        self.lalign.add(self.top_label)
+	self.vbox_as_parent.pack_start(self.gameover_msg, False, False, 0)
+        self.vbox_as_parent.pack_start(self.lalign, False, False, 0)
+	self.vbox_as_parent.pack_start(self.hbox_for_text_content, fill=False)
+	self.vbox_as_parent.pack_start(self.hbox_for_btns, fill=False)
 	color = gtk.gdk.color_parse('#FF8300')
         self.scorewindow.modify_bg(gtk.STATE_NORMAL, color)
-	self.scorewindow.add(self.vb)
+	self.scorewindow.add(self.vbox_as_parent)
 	self.scorewindow.show_all()
 
-    def readscores(self,textbuffer,line):
-	 if not (os.stat("score_card1.txt").st_size == 0):  # when file not empty
-          with open("score_card1.txt", "r") as infile:
+    def recent_ten_scores(self,textbuffer,line):
+	 if not (os.stat("sorted_score_card.txt").st_size == 0):  # when file not empty
+          with open("sorted_score_card.txt", "r") as infile:
 	   for i in range(0, 10):  # displays only top 10 lines of the file
 	     line += '\n' + str(i + 1) + '\t' + infile.readline()
           textbuffer.set_text(line)
 
-    def readscores2(self, textbuffer, line):
+    def last_game_ans_list(self, textbuffer, line):
 	 global list_of_user_ans
 	 global list_of_comp_ans
 	 a = len(list_of_comp_ans)
@@ -211,7 +208,7 @@ class scoreWindow:
 	  j += 1
          textbuffer.set_text(line)
 
-    def readscores1(self, textbuffer, line):
+    def last_game_score_stats(self, textbuffer, line):
 	  line += '   ' + str(accuracy) + '\t\t\t  ' +\
 	   str(global_first_num) + '\t\t\t  ' + \
 	   str(global_second_num) + '\t\t    ' +\
@@ -223,12 +220,13 @@ class scoreWindow:
 	   line += 'Subtraction\n'
           textbuffer.set_text(line)
 
-    def chkans_card(self, button, window):
+    def last_game_compare_ans_card(self, button, window):
 	window.destroy()
 	global redirect_opt
 	redirect_opt = 2
 	scoreWindow()
-    def last_game_score(self, button, window):
+
+    def last_game_score_card(self, button, window):
 	window.destroy()
 	global redirect_opt
 	redirect_opt = 1
@@ -245,11 +243,9 @@ class ScoreButton(ToolButton):
 	scoreWindow()
 
 
-class NotifyAlert1(Alert):
+class GameToolbar(Alert):
     def __init__(self, **kwargs):
 	Alert.__init__(self, **kwargs)
-
-
         self.add_button(1, _('New\nGame'), icon=None)
         self.add_button(2, _(' Change \n Numbers '), icon=None)
         self.add_button(3, _('Easy'), icon=None)
@@ -272,17 +268,15 @@ class ChatStudioSelf(activity.Activity):
 	self.local_first_num = 0
 	self.local_second_num = 0
 	self.limit_num = 50
-	self.sum1 = 0
-	self.diff1 = 0
+	self.calculated_sum = 0
+	self.calculated_diff = 0
 	self.second_attempt_flag = False
-	self.mode_of_game = {}
-	self.op_mode = ""
+	self.metadata_dict = {}
+	self.mode_of_game = ""
 	self.game_metadata = False
 	self.difficulty_level = "Easy"
-	self.initialize = 0
+	self.first_come_check = 0
 	self.create_toolbar()
-
-
         pservice = presenceservice.get_instance()
         self.owner = pservice.get_owner()
         # Chat is room or one to one:
@@ -308,9 +302,8 @@ class ChatStudioSelf(activity.Activity):
         self._modelist = ['Select Mode', '+ Add', '- Subtract']
        	for i, f in enumerate(self._modelist):
          self._modes.combo.append_item(i, f) 
-       	self.modes_handle_id = self._modes.combo.connect("changed", self._changemodes_toolbar)
+       	self.modes_handle_id = self._modes.combo.connect("changed", self._change_modes_toolbar)
         toolbar_box.toolbar.insert(self._modes, -1)
-
         self._modes.combo.set_active(0)
 
         separator = gtk.SeparatorToolItem()
@@ -344,33 +337,33 @@ class ChatStudioSelf(activity.Activity):
 	toolbar_box.toolbar.insert(stopButton, -1)
         toolbar_box.show_all()
 
-    def _changemodes_toolbar(self, combo):
-        self.x = combo.get_active()
+    def _change_modes_toolbar(self, combo):
+        response_id_of_modes_toolbar = combo.get_active()
 	global global_first_num
 	global global_second_num
-	if (self.x == 1):
+	if (response_id_of_modes_toolbar == 1):
 	 global_first_num = randint(5, 9)
 	 global_second_num = randint(5, 9)
 	 combo.set_sensitive(False)
 	 self.local_first_num = global_first_num
 	 self.local_second_num = global_second_num
-	 self.sum1 = self.local_first_num + self.local_second_num
-	 self.op_mode = "Addition"
+	 self.calculated_sum = self.local_first_num + self.local_second_num
+	 self.mode_of_game = "Addition"
 	 global addition_mode
 	 addition_mode = True
-	 self.showalert()
+	 self.show_game_toolbar()
 
- 	elif (self.x == 2):
+ 	elif (response_id_of_modes_toolbar == 2):
 	 global_first_num = randint(50, 55)
 	 global_second_num = randint(5, 9)
 	 combo.set_sensitive(False)
 	 self.local_first_num = global_first_num
 	 self.local_second_num = global_second_num
-	 self.diff1 = self.local_first_num - self.local_second_num
-	 self.op_mode = "Subtraction"
+	 self.calculated_diff = self.local_first_num - self.local_second_num
+	 self.mode_of_game = "Subtraction"
 	 global subtraction_mode
 	 subtraction_mode = True
-	 self.showalert()
+	 self.show_game_toolbar()
 
     def _setup(self):
         self.entry.set_sensitive(True)
@@ -387,15 +380,15 @@ class ChatStudioSelf(activity.Activity):
     def _alert_cancel_cb(self, alert, response_id):
         self.remove_alert(alert)
 
-    def _alert1(self, title, text=None):
-        alert = NotifyAlert1()
-        alert.props.title = title
-        alert.props.msg = text
-        self.add_alert(alert)
-        alert.connect('response', self.ng)
-        alert.show()
+    def game_tools(self, title, text=None):
+        game_opts = GameToolbar()
+        game_opts.props.title = title
+        game_opts.props.msg = text
+        self.add_alert(game_opts)
+        game_opts.connect('response', self.new_game)
+        game_opts.show()
 
-    def ng(self, alert, response_id):
+    def new_game(self, game_opt_tools, response_id):
 	global steps
  	global no_of_mistake
 	global accuracy
@@ -405,18 +398,19 @@ class ChatStudioSelf(activity.Activity):
 	steps = 0
  	accuracy = 0.0
 	no_of_mistake = 0
-	self.initialize = 0
+	self.first_come_check = 0
 	gameComplete = False
 	self.second_attempt_flag = False
+	self.entry.set_sensitive(True)
+        self.entry.grab_focus()
 	del list_of_comp_ans[:]
 	del list_of_user_ans[:]
 	global scoretime
     	scoretime = time.time()
-        self.remalert(alert)
+        self.remove_game_toolbar(game_opt_tools)
 	global global_first_num
 	global global_second_num
 	self.chatbox.rem()
-	
 	if (response_id == 1):  # Cancel--> New Game
 	 self.difficulty_level = "Easy"
 	 if addition_mode:
@@ -435,27 +429,27 @@ class ChatStudioSelf(activity.Activity):
 	  type=gtk.MESSAGE_QUESTION, buttons=gtk.BUTTONS_OK,\
 	 message_format="Enter Numbers")
 	 action_area = messagedialog.get_content_area()
-	 lbl1 = gtk.Label("Start")
-	 entry1 = gtk.Entry()
-         entry1.set_size_request(int(gtk.gdk.screen_width() / 25), -1)
+	 start_lbl = gtk.Label("Start")
+	 input_first_num_txtbox = gtk.Entry()
+         input_first_num_txtbox.set_size_request(int(gtk.gdk.screen_width() / 25), -1)
 	 if addition_mode:
-	  lbl2 = gtk.Label("+ Add")
+	  mode_lbl = gtk.Label("+ Add")
 	 elif subtraction_mode:
-	  lbl2 = gtk.Label("- Subtract")
-	 entry2 = gtk.Entry()
-         entry2.set_size_request(int(gtk.gdk.screen_width() / 25), -1)
+	  mode_lbl = gtk.Label("- Subtract")
+	 input_second_num_txtbox = gtk.Entry()
+         input_second_num_txtbox.set_size_request(int(gtk.gdk.screen_width() / 25), -1)
 
-	 action_area.pack_start(lbl1)
-	 action_area.pack_start(entry1)
-	 action_area.pack_start(lbl2)
-	 action_area.pack_start(entry2)
+	 action_area.pack_start(start_lbl)
+	 action_area.pack_start(input_first_num_txtbox)
+	 action_area.pack_start(mode_lbl)
+	 action_area.pack_start(input_second_num_txtbox)
 	 messagedialog.show_all()
 	 changed_num_resp = messagedialog.run()
 
          if changed_num_resp == gtk.RESPONSE_OK:
 	  try:
-       	   global_first_num = int(entry1.get_text())
-	   global_second_num = int(entry2.get_text())
+       	   global_first_num = int(input_first_num_txtbox.get_text())
+	   global_second_num = int(input_second_num_txtbox.get_text())
 	   if subtraction_mode:
 	    if (global_second_num > global_first_num):
 		# raise BadNum("Num2 canot be greater than Num1")
@@ -523,26 +517,28 @@ class ChatStudioSelf(activity.Activity):
 
 	self.local_first_num = global_first_num
 	self.local_second_num = global_second_num
-	if addition_mode:
-	 self.sum1 = self.local_first_num + self.local_second_num
-	if subtraction_mode:
-	 self.diff1 = self.local_first_num - self.local_second_num
-		
 	global list_of_comp_ans
-	list_of_comp_ans.append(self.sum1)
-	self.showalert()
+	if addition_mode:
+	 self.calculated_sum = self.local_first_num + self.local_second_num
+	 list_of_comp_ans.append(self.calculated_sum)
 
-    def remalert(self, alert):
+	if subtraction_mode:
+	 self.calculated_diff = self.local_first_num - self.local_second_num
+	 list_of_comp_ans.append(self.calculated_diff)
+		
+	self.show_game_toolbar()
+
+    def remove_game_toolbar(self, alert):
 	self.remove_alert(alert)
 
-    def showalert(self):
+    def show_game_toolbar(self):
 	self.chatbox.rem()
 	if addition_mode:
-         self._alert1(_('\t\tStart : ' + \
+         self.game_tools(_('\t\tStart : ' + \
          	str(global_first_num) + '\n\t\t+ Add\t: ' +\
          	str(global_second_num)), _(''))
 	if subtraction_mode:
-         self._alert1(_('\t\tStart : ' + \
+         self.game_tools(_('\t\tStart : ' + \
          	str(global_first_num) + '\n\t\t- Subtract\t: ' + \
          	str(global_second_num)), _(''))
 
@@ -584,7 +580,7 @@ class ChatStudioSelf(activity.Activity):
             vadj.set_value(vadj.upper - vadj.page_size)
 
     def entry_activate_cb(self, entry):
-	strr = "Please enter a number."
+	msg_for_NaN = "Please enter a number."
 	self.chatbox._scroll_auto = True
         text = entry.props.text
 	logger.debug('Entry: %s' % text)
@@ -595,112 +591,114 @@ class ChatStudioSelf(activity.Activity):
 	global list_of_user_ans
 	if text.isdigit():
 	 if addition_mode:
-	  while (self.sum1 <= self.limit_num):
+	  while (self.calculated_sum <= self.limit_num):
    	   self.chatbox.add_text(self.owner, text)
        	   entry.props.text = ''
 	   list_of_user_ans.append(int(text))
-	   list_of_comp_ans.append(self.sum1)
-   	   self.chatbox.add_text1(self.owner, str(self.sum1))
+	   list_of_comp_ans.append(self.calculated_sum)
+   	   self.chatbox.add_text1(self.owner, str(self.calculated_sum))
 	   self.connect(self.input_ans_check(text))
-	   if (self.initialize == 0):
+	   if (self.first_come_check == 0):
     	    scoretime = time.time()
-	    self.initialize = 1
+	    self.first_come_check = 1
 	 elif subtraction_mode:
-	  while (self.diff1 > 0):
+	  while (self.calculated_diff > 0):
    	   self.chatbox.add_text(self.owner, text)
        	   entry.props.text = ''
 	   list_of_user_ans.append(text)
-	   list_of_comp_ans.append(self.diff1)
-   	   self.chatbox.add_text1(self.owner, str(self.diff1))
+	   list_of_comp_ans.append(self.calculated_diff)
+   	   self.chatbox.add_text1(self.owner, str(self.calculated_diff))
 	   self.connect(self.input_ans_check(text))
-	   if (self.initialize == 0):
+	   if (self.first_come_check == 0):
     	    scoretime = time.time()
-	    self.initialize = 1
-	 self.calAccuracy(no_of_mistake, steps)
+	    self.first_come_check = 1
+	 self.calc_accuracy(no_of_mistake, steps)
 	 scoretime = time.time() - scoretime
-	 self.msg_displ(accuracy, scoretime)
+	 self.game_finish()
 	 gameComplete = True
 	 self.game_metadata = True
-	 self.write_data_for_visual()
-	 self.write_score()
+	 self.write_to_csv()
+	 self.write_to_scorecard()
 	 self.sort_score_file()
-	 self.initialize += 1
+	 self.first_come_check += 1
 	 entry.props.text = ''
+   	 self.chatbox.add_text1(self.owner, "Game Over")
+	 self.entry.set_sensitive(False)
 	else:
-	   self.chatbox.add_text(self.owner, strr)
+	   self.chatbox.add_text(self.owner, msg_for_NaN)
         entry.props.text = ''
 
-    def calAccuracy(self, mist, stps):
+    def calc_accuracy(self, mistakes_arg, steps_arg):
 	  global accuracy
-	  accuracy = ((stps - mist) / float(stps)) * 100
+	  accuracy = ((steps_arg - mistakes_arg) / float(steps_arg)) * 100
 	  accuracy = int(accuracy * 100) / 100.0
 	  accuracy = int(round(accuracy, 0))
 
-    def msg_displ(self, ac, st):
-	  lbl1 = gtk.Label()
-	  lbl2 = gtk.Label()
-	  strdialog = ''
-	  scoreimg = gtk.Image()
+    def game_finish(self):
+	  top_lbl_in_dialog = ''
+	  game_reply = gtk.Label()
+	  game_details = gtk.Label()
+	  img_on_game_finish = gtk.Image()
 	  if (accuracy == 100):
-	   strdialog = "Congratulations..!!"
-	   lbl1.set_text("Perfect Score")
-	   lbl2.set_text("Accuracy: " + str(accuracy) + \
+	   top_lbl_in_dialog = "Congratulations..!!"
+	   game_reply.set_text("Perfect Score")
+	   game_details.set_text("Accuracy: " + str(accuracy) + \
 	   	"\nTime: " + str('%.1f' % scoretime))
-	   scoreimg.set_from_file("100AC.png")
+	   img_on_game_finish.set_from_file("100AC.png")
 	  elif (accuracy < 100 and accuracy >= 85):
-	   strdialog = "Congratulations..!!"
-	   lbl1.set_text("Great Score")
-	   lbl2.set_text("Accuracy: " + str(accuracy) + \
+	   top_lbl_in_dialog = "Congratulations..!!"
+	   game_reply.set_text("Great Score")
+	   game_details.set_text("Accuracy: " + str(accuracy) + \
 	   	"\nTime: " + str('%.1f' % scoretime))
-	   scoreimg.set_from_file("85_100AC.png")
+	   img_on_game_finish.set_from_file("85_100AC.png")
 	  elif (accuracy < 85 and accuracy >= 60):
-	   strdialog = "Congratulations..!!"
-	   lbl1.set_text("Well Played")
-	   lbl2.set_text("Accuracy: " + str(accuracy) + \
+	   top_lbl_in_dialog = "Congratulations..!!"
+	   game_reply.set_text("Well Played")
+	   game_details.set_text("Accuracy: " + str(accuracy) + \
 	   	"\nTime: " + str('%.1f' % scoretime))
-	   scoreimg.set_from_file("60_85AC.png")
+	   img_on_game_finish.set_from_file("60_85AC.png")
 	  elif (accuracy == 0):
-	   strdialog = "Game Over..!!"
-	   lbl1.set_text("Better Luck Next Time")
-	   lbl2.set_text("Accuracy: " + str(accuracy) + \
+	   top_lbl_in_dialog = "Game Over..!!"
+	   game_reply.set_text("Better Luck Next Time")
+	   game_details.set_text("Accuracy: " + str(accuracy) + \
 	   	"\nTime: " + str('%.1f' % scoretime))
-	   scoreimg.set_from_file("AC_0.svg")
+	   img_on_game_finish.set_from_file("AC_0.svg")
 	  else:
-	   strdialog = "Game Over..!!"
-	   lbl1.set_text("Play Once More..")
-	   lbl2.set_text("Accuracy: " + str(accuracy) + \
+	   top_lbl_in_dialog = "Game Over..!!"
+	   game_reply.set_text("Play Once More..")
+	   game_details.set_text("Accuracy: " + str(accuracy) + \
 	   	"\nTime: " + str('%.1f' % scoretime))
-	   scoreimg.set_from_file("60AC.png")
+	   img_on_game_finish.set_from_file("60AC.png")
 
 	  messagedialog = gtk.MessageDialog(parent=None, \
 	  	flags=gtk.DIALOG_MODAL, type=gtk.MESSAGE_INFO, \
-	  	buttons=gtk.BUTTONS_OK,message_format=strdialog)
+	  	buttons=gtk.BUTTONS_OK,message_format=top_lbl_in_dialog)
 	  
 	  messagedialog.modify_bg(gtk.STATE_NORMAL,gtk.gdk.color_parse('#00FFFF'))
 	  
-   	  messagedialog.set_image(scoreimg)
+   	  messagedialog.set_image(img_on_game_finish)
 	  action_area = messagedialog.get_content_area()
 
-	  action_area.pack_start(lbl1)
-	  action_area.pack_start(lbl2)
+	  action_area.pack_start(game_reply)
+	  action_area.pack_start(game_details)
 	  messagedialog.show_all()
 	  messagedialog.run()
 	  messagedialog.destroy()
 
-    def write_data_for_visual(self):
+    def write_to_csv(self):
 	global accuracy
-	x = time.strftime("%d/%m %I:%M")
-	a = round(scoretime, 3)
+	time_of_write = time.strftime("%d/%m %I:%M")
+	game_time = round(scoretime, 3)
 	with open("scoreStatistics.csv", "a+") as f:
-	 f.write(x + "," + '%i' %accuracy + "," + \
+	 f.write(time_of_write + "," + '%i' %accuracy + "," + \
 	 	str(self.local_first_num) + "," + \
 	 	str(self.local_second_num) + "," + \
-	 	str(self.op_mode) + "," + str(steps))
+	 	str(self.mode_of_game) + "," + str(steps))
  	 f.write("," + str(no_of_mistake) + "," + \
- 	 	str(a) + "," + str(round((a / steps), 3)) \
+ 	 	str(game_time) + "," + str(round((game_time / steps), 3)) \
  	 	+ "," + self.difficulty_level + "\n")
 
-    def write_score(self):
+    def write_to_scorecard(self):
 	if addition_mode:
 	 line1 = 'Addition'
 	elif subtraction_mode:
@@ -721,7 +719,7 @@ class ChatStudioSelf(activity.Activity):
 	with open('score_card.txt') as fin:
     		lines = [line.split() for line in fin]
 	lines.sort(key=lambda x:int(x[0]), reverse=True)
-	with open('score_card1.txt', 'w') as fout:
+	with open('sorted_score_card.txt', 'w') as fout:
 		for el in lines:
         		fout.write('{0}\t\t\t\t\n'.format('\t\t\t'.join(el)))
 
@@ -733,9 +731,9 @@ class ChatStudioSelf(activity.Activity):
 	 global list_of_comp_ans
 	 global list_of_user_ans
 	 if addition_mode:
-	  v = self.sum1
+	  v = self.calculated_sum
 	 elif subtraction_mode:
-	  v = self.diff1
+	  v = self.calculated_diff
 	 steps += 1
 	 if (v == int(ans)):
 	   accuracy += 10
@@ -748,10 +746,11 @@ class ChatStudioSelf(activity.Activity):
 	   else:
 	    self.second_attempt_flag = True
 	 if addition_mode and not self.second_attempt_flag:
-	  self.sum1 = self.sum1 + self.local_second_num
+	  self.calculated_sum = self.calculated_sum + self.local_second_num
 	  self.second_attempt_flag = False
-	 elif subtraction_mode:
-	  self.diff1 = self.diff1 - self.local_second_num
+	 elif subtraction_mode and not self.second_attempt_flag:
+	  self.calculated_diff = self.calculated_diff - self.local_second_num
+	  self.second_attempt_flag = False
   	 self.connect(self.input_ans_check(self.connect(self.entry_activate_cb())))
 
     def write_file(self, file_path):
@@ -774,20 +773,20 @@ class ChatStudioSelf(activity.Activity):
 	if self.game_metadata:
          self.metadata['Steps'] = steps
          self.metadata['Accuracy'] = accuracy
- 	 self.mode_of_game["Player"] = str(self.owner.props.nick)
- 	 self.mode_of_game["Played At"] = str(datetime.now())
-	 self.mode_of_game["Start_Num: "] = self.local_first_num
-	 self.mode_of_game["Second_num"] = self.local_second_num
-	 self.mode_of_game["Mistakes"] = no_of_mistake
-	 self.mode_of_game["Mode_of_game"] = self.op_mode
-	 self.mode_of_game["Steps"] = steps
-	 self.mode_of_game["Accuracy"] = accuracy
-	 self.mode_of_game["Correct_Ans"] = json.dumps(list_of_comp_ans)
-	 self.mode_of_game["User_Ans"] = json.dumps(list_of_user_ans)
-	 self.mode_of_game["Time_taken"] = round(scoretime, 3)
-	 self.mode_of_game["Avg_response_time"] = round((scoretime / steps), 3)
-	 self.mode_of_game["Difficulty_Level"] = str(self.difficulty_level)
-         self.metadata['Game_Details'] = json.dumps(self.mode_of_game, indent=4)
+ 	 self.metadata_dict["Player"] = str(self.owner.props.nick)
+ 	 self.metadata_dict["Played At"] = str(datetime.now())
+	 self.metadata_dict["Start_Num: "] = self.local_first_num
+	 self.metadata_dict["Second_num"] = self.local_second_num
+	 self.metadata_dict["Mistakes"] = no_of_mistake
+	 self.metadata_dict["Mode_of_game"] = self.mode_of_game
+	 self.metadata_dict["Steps"] = steps
+	 self.metadata_dict["Accuracy"] = accuracy
+	 self.metadata_dict["Correct_Ans"] = json.dumps(list_of_comp_ans)
+	 self.metadata_dict["User_Ans"] = json.dumps(list_of_user_ans)
+	 self.metadata_dict["Time_taken"] = round(scoretime, 3)
+	 self.metadata_dict["Avg_response_time"] = round((scoretime / steps), 3)
+	 self.metadata_dict["Difficulty_Level"] = str(self.difficulty_level)
+         self.metadata['Game_Details'] = json.dumps(self.metadata_dict, indent=4)
 
     def read_file(self, file_path):
         """Load a chat log from the Journal.
