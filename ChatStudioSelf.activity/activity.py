@@ -54,12 +54,24 @@ scoretime = time.time()
 
 
 class VisualScore(ToolButton):
+    """Class VisualScore is used to generate bar graph
+	based on the accuracy scored by the user
+	on the respective date/time
+    """
+
     def __init__(self, activity, **kwargs):
         ToolButton.__init__(self, 'scorestats', **kwargs)
         self.props.tooltip = _('Score Stats')
         self.connect('clicked', self.draw_score_chart)
 
     def draw_score_chart(self, button):
+        """ This function is called on click of 
+	    'star' icon button of toolbar.
+	    Output: Displays bar graph in a window for scores.
+	     1. Two lists are created by reading the scoreStatistics.csv file
+	     2. Graph is created by passing these two lists to matplotlib
+        """
+
 	winScore = gtk.Window()
 	winScore.connect("destroy", lambda x: gtk.main_quit())
 	winScore.set_default_size(800, 490)
@@ -91,6 +103,11 @@ class VisualScore(ToolButton):
 
 
 class VisualTime(ToolButton):
+    """Class VisualTime is used to generate bar graph
+	based on the time taken to finish the game by the user
+	on the respective date/time
+    """
+
     def __init__(self, activity, **kwargs):
 
         ToolButton.__init__(self, 'timestats', **kwargs)
@@ -98,6 +115,12 @@ class VisualTime(ToolButton):
         self.connect('clicked', self.draw_time_chart)
 
     def draw_time_chart(self, button):
+        """ This function is called on click of 
+	    'clock' icon button of toolbar.
+	    Output: Displays bar graph in a window for game completion times.
+	     1. Two lists are created by reading the scoreStatistics.csv file
+	     2. Graph is created by passing these two lists to matplotlib
+        """
 	winTime = gtk.Window()
 	winTime.connect("destroy", lambda x: gtk.main_quit())
 	winTime.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse('white'))
@@ -130,6 +153,13 @@ class VisualTime(ToolButton):
 
 class scoreWindow:
     def __init__(self):
+        """ This function is called on click of 
+	    'white report card' icon button of toolbar.
+	    Output: Displays Score-Board in a window .
+	     This window contains two buttons:
+		1. Check Last Game Score
+		2. Compare Last Game Answers
+        """
         self.scorewindow = gtk.Window(gtk.WINDOW_TOPLEVEL)
 	self.scorewindow.set_resizable(False)
 	self.scorewindow.set_title("Score card")
@@ -188,13 +218,24 @@ class scoreWindow:
 	self.scorewindow.show_all()
 
     def recent_ten_scores(self,textbuffer,line):
-	 if not (os.stat("sorted_score_card.txt").st_size == 0):  # when file not empty
+        """ 
+	    Displays only top 10 lines of the 
+	    sorted_Score_card.txt file
+        """
+
+	 if not (os.stat("sorted_score_card.txt").st_size == 0):
           with open("sorted_score_card.txt", "r") as infile:
-	   for i in range(0, 10):  # displays only top 10 lines of the file
+	   for i in range(0, 10):
 	     line += '\n' + str(i + 1) + '\t' + infile.readline()
           textbuffer.set_text(line)
 
     def last_game_ans_list(self, textbuffer, line):
+        """ 
+	    Displays recent played game's user's answer list
+	    and computer generated answer list.
+	    This can be used to compare the answers.
+        """
+
 	 global list_of_user_ans
 	 global list_of_comp_ans
 	 a = len(list_of_comp_ans)
@@ -209,6 +250,10 @@ class scoreWindow:
          textbuffer.set_text(line)
 
     def last_game_score_stats(self, textbuffer, line):
+        """ 
+	    Displays recent played game's statistics
+        """
+
 	  line += '   ' + str(accuracy) + '\t\t\t  ' +\
 	   str(global_first_num) + '\t\t\t  ' + \
 	   str(global_second_num) + '\t\t    ' +\
@@ -245,6 +290,7 @@ class ScoreButton(ToolButton):
 
 class GameToolbar(Alert):
     def __init__(self, **kwargs):
+
 	Alert.__init__(self, **kwargs)
         self.add_button(1, _('New\nGame'), icon=None)
         self.add_button(2, _(' Change \n Numbers '), icon=None)
@@ -256,6 +302,9 @@ class GameToolbar(Alert):
 class ChatStudioSelf(activity.Activity):
 
     def __init__(self, handle):
+        """ 
+	    __init__ function initializes the variables needed
+        """
         self.chatbox = ChatBox()
         super(ChatStudioSelf, self).__init__(handle)
         self.entry = None
@@ -263,8 +312,6 @@ class ChatStudioSelf(activity.Activity):
         self.set_canvas(root)
         root.show_all()
         self.entry.grab_focus()
-	global accuracy
-	accuracy = 0
 	self.local_first_num = 0
 	self.local_second_num = 0
 	self.limit_num = 50
@@ -277,12 +324,16 @@ class ChatStudioSelf(activity.Activity):
 	self.difficulty_level = "Easy"
 	self.first_come_check = 0
 	self.create_toolbar()
+        self.entry.set_sensitive(False)
         pservice = presenceservice.get_instance()
         self.owner = pservice.get_owner()
         # Chat is room or one to one:
         self._chat_is_room = False
 
     def create_toolbar(self):
+        """ 
+	    This function creates the game toolbar
+        """
         toolbar_box = ToolbarBox()
         self.set_toolbar_box(toolbar_box)
         toolbar_box.toolbar.insert(ActivityToolbarButton(self), -1)
@@ -299,7 +350,7 @@ class ChatStudioSelf(activity.Activity):
         toolbar_box.toolbar.insert(separator, -1)
 
 	self._modes = ToolComboBox()
-        self._modelist = ['Select Mode', '+ Add', '- Subtract']
+        self._modelist = ['Select Mode', '+ Addition', '- Subtraction']
        	for i, f in enumerate(self._modelist):
          self._modes.combo.append_item(i, f) 
        	self.modes_handle_id = self._modes.combo.connect("changed", self._change_modes_toolbar)
@@ -338,6 +389,9 @@ class ChatStudioSelf(activity.Activity):
         toolbar_box.show_all()
 
     def _change_modes_toolbar(self, combo):
+        """ 
+	   This function is called when the mode of the game is selected.
+        """
         response_id_of_modes_toolbar = combo.get_active()
 	global global_first_num
 	global global_second_num
@@ -364,6 +418,9 @@ class ChatStudioSelf(activity.Activity):
 	 global subtraction_mode
 	 subtraction_mode = True
 	 self.show_game_toolbar()
+        self.entry.set_sensitive(True)
+        self.entry.grab_focus()
+
 
     def _setup(self):
         self.entry.set_sensitive(True)
@@ -381,6 +438,9 @@ class ChatStudioSelf(activity.Activity):
         self.remove_alert(alert)
 
     def game_tools(self, title, text=None):
+        """ 
+	   This function creates instance of GameToolbar class.
+        """
         game_opts = GameToolbar()
         game_opts.props.title = title
         game_opts.props.msg = text
@@ -389,6 +449,10 @@ class ChatStudioSelf(activity.Activity):
         game_opts.show()
 
     def new_game(self, game_opt_tools, response_id):
+        """ 
+	   This function handles response of GameToolbar.
+	   Generates numbers based on the button clicked
+        """
 	global steps
  	global no_of_mistake
 	global accuracy
@@ -411,7 +475,7 @@ class ChatStudioSelf(activity.Activity):
 	global global_first_num
 	global global_second_num
 	self.chatbox.rem()
-	if (response_id == 1):  # Cancel--> New Game
+	if (response_id == 1):
 	 self.difficulty_level = "Easy"
 	 if addition_mode:
 	  global_first_num = randint(5, 9)
@@ -422,9 +486,8 @@ class ChatStudioSelf(activity.Activity):
 	  global_second_num = randint(5, 9)
 	  self.limit_num = 50
 
-	elif (response_id == 2):  # OK--> Change Numbers Dialog
+	elif (response_id == 2):
 	 self.difficulty_level = "Changed_Numbers"
-
 	 messagedialog = gtk.MessageDialog(parent=None, flags=0,\
 	  type=gtk.MESSAGE_QUESTION, buttons=gtk.BUTTONS_OK,\
 	 message_format="Enter Numbers")
@@ -529,9 +592,17 @@ class ChatStudioSelf(activity.Activity):
 	self.show_game_toolbar()
 
     def remove_game_toolbar(self, alert):
+        """ 
+	   This function hides GameToolbar.
+        """
+
 	self.remove_alert(alert)
 
     def show_game_toolbar(self):
+        """ 
+	   This function displays GameToolbar.
+        """
+
 	self.chatbox.rem()
 	if addition_mode:
          self.game_tools(_('\t\tStart : ' + \
@@ -580,6 +651,16 @@ class ChatStudioSelf(activity.Activity):
             vadj.set_value(vadj.upper - vadj.page_size)
 
     def entry_activate_cb(self, entry):
+        """ 
+	   This function is triggered when user 
+	   inputs some text to the chatbox.
+	   Each input text is checked whether its a number or not.
+	   If number, performs some actions, else prompts a message.
+	   On Game Over, several actions which inlucde calculations
+	   and saving/writing to files, also the entry is disabled.
+
+        """
+
 	msg_for_NaN = "Please enter a number."
 	self.chatbox._scroll_auto = True
         text = entry.props.text
@@ -629,12 +710,21 @@ class ChatStudioSelf(activity.Activity):
         entry.props.text = ''
 
     def calc_accuracy(self, mistakes_arg, steps_arg):
+        """ 
+	   This function calculates accuracy.
+        """
 	  global accuracy
 	  accuracy = ((steps_arg - mistakes_arg) / float(steps_arg)) * 100
 	  accuracy = int(accuracy * 100) / 100.0
 	  accuracy = int(round(accuracy, 0))
 
     def game_finish(self):
+        """ 
+	   This function marks end of game
+	   by displaying a splash screen kind of
+	   with an image based on score and time played.
+        """
+
 	  top_lbl_in_dialog = ''
 	  game_reply = gtk.Label()
 	  game_details = gtk.Label()
@@ -686,6 +776,10 @@ class ChatStudioSelf(activity.Activity):
 	  messagedialog.destroy()
 
     def write_to_csv(self):
+        """ 
+	   This function writes to .csv file.
+        """
+
 	global accuracy
 	time_of_write = time.strftime("%d/%m %I:%M")
 	game_time = round(scoretime, 3)
@@ -699,13 +793,12 @@ class ChatStudioSelf(activity.Activity):
  	 	+ "," + self.difficulty_level + "\n")
 
     def write_to_scorecard(self):
-	if addition_mode:
-	 line1 = 'Addition'
-	elif subtraction_mode:
-	 line1 = 'Subtraction'
+        """ 
+	   This function writes to .txt file.
+        """
      	l = [[accuracy, self.local_first_num, \
      	self.local_second_num, no_of_mistake, \
-     	steps, '%.1f' % scoretime, line1]]
+     	steps, '%.1f' % scoretime, self.mode_of_game]]
 
 	with open('score_card.txt', 'a+') as f:
 	 for row in l:
@@ -716,6 +809,11 @@ class ChatStudioSelf(activity.Activity):
 	
 
     def sort_score_file(self):
+        """ 
+	   This function sorts the score_card file.
+	   This is done to display top ten lines in scoreWindow.
+        """
+
 	with open('score_card.txt') as fin:
     		lines = [line.split() for line in fin]
 	lines.sort(key=lambda x:int(x[0]), reverse=True)
@@ -725,17 +823,23 @@ class ChatStudioSelf(activity.Activity):
 
     #for evaluation for user ans
     def input_ans_check(self, ans):
+        """ 
+	   This function is called for every ans the user inputs.
+	   for checking the answer.
+	   If wrong, the user gets one chance to correct it.
+        """
+
 	 global steps
  	 global no_of_mistake
 	 global accuracy
 	 global list_of_comp_ans
 	 global list_of_user_ans
 	 if addition_mode:
-	  v = self.calculated_sum
+	  correct_ans = self.calculated_sum
 	 elif subtraction_mode:
-	  v = self.calculated_diff
+	  correct_ans = self.calculated_diff
 	 steps += 1
-	 if (v == int(ans)):
+	 if (correct_ans == int(ans)):
 	   accuracy += 10
 	   if self.second_attempt_flag:
 	    self.second_attempt_flag = False
