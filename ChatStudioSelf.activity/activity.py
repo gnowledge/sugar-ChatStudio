@@ -218,10 +218,10 @@ class scoreWindow:
 	self.scorewindow.show_all()
 
     def recent_ten_scores(self,textbuffer,line):
-         """ 
+        """ 
 	    Displays only top 10 lines of the 
 	    sorted_Score_card.txt file
-         """
+        """
 
 	 if not (os.stat("sorted_score_card.txt").st_size == 0):
           with open("sorted_score_card.txt", "r") as infile:
@@ -230,11 +230,11 @@ class scoreWindow:
           textbuffer.set_text(line)
 
     def last_game_ans_list(self, textbuffer, line):
-         """ 
+        """ 
 	    Displays recent played game's user's answer list
 	    and computer generated answer list.
 	    This can be used to compare the answers.
-         """
+        """
 
 	 global list_of_user_ans
 	 global list_of_comp_ans
@@ -250,9 +250,9 @@ class scoreWindow:
          textbuffer.set_text(line)
 
     def last_game_score_stats(self, textbuffer, line):
-          """ 
+        """ 
 	    Displays recent played game's statistics
-          """
+        """
 
 	  line += '   ' + str(accuracy) + '\t\t\t  ' +\
 	   str(global_first_num) + '\t\t\t  ' + \
@@ -314,6 +314,7 @@ class ChatStudioSelf(activity.Activity):
         self.entry.grab_focus()
 	self.local_first_num = 0
 	self.local_second_num = 0
+	self.limit_num = 50
 	self.calculated_sum = 0
 	self.calculated_diff = 0
 	self.second_attempt_flag = False
@@ -526,9 +527,7 @@ class ChatStudioSelf(activity.Activity):
 	   elif subtraction_mode:
 	    global_first_num = randint(50, 59)
 	    global_second_num = randint(5, 9)
-
 	 messagedialog.destroy()
-
 
 	elif(response_id == 3):
 	 self.difficulty_level = "Easy"
@@ -554,7 +553,6 @@ class ChatStudioSelf(activity.Activity):
 	   global_second_num = 5
 	  elif (global_first_num == 56):
 	   global_second_num = choice(l3)
-
 
 	elif(response_id == 4):
 	 self.difficulty_level = "Medium"
@@ -681,7 +679,6 @@ class ChatStudioSelf(activity.Activity):
    	   self.chatbox.add_text(self.owner, text)
 	   list_of_user_ans.append(int(text))
 	   self.connect(self.input_ans_check(text))
-
 	   if (self.first_come_check == 0):
     	    scoretime = time.time()
 	    self.first_come_check = 1
@@ -769,11 +766,11 @@ class ChatStudioSelf(activity.Activity):
 	  accuracy = int(round(accuracy, 0))
 
     def game_finish(self):
-          """ 
+        """ 
 	   This function marks end of game
 	   by displaying a splash screen kind of
 	   with an image based on score and time played.
-          """
+        """
 
 	  top_lbl_in_dialog = ''
 	  game_reply = gtk.Label()
