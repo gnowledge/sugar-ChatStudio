@@ -282,14 +282,18 @@ class ChatBox(gtk.ScrolledWindow):
 
         if not buddy:
             buddy = self.owner
-
-        if type(buddy) is dict:
-            # dict required for loading chat log from journal
-            nick = buddy['nick']
-            color = buddy['color']
-        else:
-            nick = buddy.props.nick
-            color = buddy.props.color
+	if buddy == "Computer":
+            nick = "Computer"
+            color = '#000000,#FFF8DC'
+	
+	else:
+            if type(buddy) is dict:
+                # dict required for loading chat log from journal
+                nick = buddy['nick']
+                color = buddy['color']
+            else:
+                nick = buddy.props.nick
+                color = buddy.props.color
         try:
             color_stroke_html, color_fill_html = color.split(',')
         except ValueError:
@@ -357,76 +361,6 @@ class ChatBox(gtk.ScrolledWindow):
     def rem(self):
 	for i in self._conversation.get_children():
 		self._conversation.remove(i)
-
-    def add_text1(self, buddy, text, status_message=False):
-        if not buddy:
-            buddy = 'Computer'
-
-        if type(buddy) is dict:
-            # dict required for loading chat log from journal
-            nick = 'Computer'
-            color = '#FFF8DC'
-        else:
-            nick = 'Computer'
-            color = '#FFF8DC'
-        try:
-            color_stroke_html, color_fill_html = color.split(',')
-        except ValueError:
-            color_stroke_html, color_fill_html = ('#000000', '#FFF8DC')
-
-        # Select text color based on fill color:
-        color_fill_rgba = style.Color(color_fill_html).get_rgba()
-        color_fill_gray = (color_fill_rgba[0] + color_fill_rgba[1] +
-                color_fill_rgba[2]) / 3
-        color_stroke = style.Color(color_stroke_html)
-        color_fill = style.Color(color_fill_html)
-
-        if color_fill_gray < 0.5:
-            text_color = style.COLOR_WHITE
-        else:
-            text_color = style.COLOR_BLACK
-
-        self._add_log(nick,text, status_message)
-
-        # Check for Right-To-Left languages:
-        if pango.find_base_dir(nick, -1) == pango.DIRECTION_RTL:
-            lang_rtl = True
-        else:
-            lang_rtl = False
-
-        # Check if new message box or add text to previous:
-        new_msg = True
-        if new_msg:
-            rb = RoundBox()
-            screen_width = gtk.gdk.screen_width()
-            # keep space to the scrollbar
-            rb.set_size_request(screen_width - 50, -1)
-            rb.props.border_width = style.DEFAULT_PADDING
-            rb.props.spacing = style.DEFAULT_SPACING
-            rb.background_color = color_fill
-            rb.border_color = color_stroke
-            self._last_msg_sender = buddy
-            name = ColorLabel(text=nick + ':', color=text_color)
-            name_vbox = gtk.VBox()
-            name_vbox.pack_start(name, False, False)
-            rb.pack_start(name_vbox, False, False)
-
-            message = TextBox(text_color, color_fill, lang_rtl)
-            vbox = gtk.VBox()
-            vbox.pack_start(message, True, True)
-            rb.pack_start(vbox, True, True)
-            self._last_msg = message
-            self._conversation.pack_start(rb, False, False)
-
-
-        message.add_text(text)
-        self._conversation.show_all()
-
-
-
-
-
-
 
     def add_separator(self, timestamp):
         """Add whitespace and timestamp between chat sessions."""

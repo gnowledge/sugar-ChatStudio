@@ -84,7 +84,7 @@ var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
   .html(function(d) {
-    return ("<strong>Date:</strong> <span style='color:white'>" + d.name + "</span> <strong>Time:</strong> <span style='color:white'>" + d.value + "</span> "
+    return ("<strong>Date:</strong> <span style='color:white'>" + d.date_detail + "</span> <strong>Accuracy:</strong> <span style='color:white'>" + d.score + "</span><br> <strong>Start_num:</strong> <span style='color:white'>" + d.firstnum + "</span> <strong>Second_Num:</strong> <span style='color:white'>" + d.secondnum + "</span><strong>Mistakes:</strong> <span style='color:white'>" + d.no_of_mistakes + "</span><strong>Mode:</strong> <span style='color:white'>" + d.difficulty_level + "</span><strong>Steps</strong> <span style='color:white'>" + d.total_steps + "</span><strong>Time taken:</strong> <span style='color:white'>" + d.difficulty_level + "</span><strong>Steps</strong> <span style='color:white'>" + d.time_taken + "</span>"
 
 );
   })
@@ -97,9 +97,9 @@ var svg = d3.select("body").append("svg")
 
 svg.call(tip);
 
-d3.csv("timeeStatistics.csv", type, function(error, data) {
-  x.domain(data.map(function(d) { return d.name; }));
-  y.domain([0, d3.max(data, function(d) { return d.value; })]);
+d3.csv("scoreStatistics.csv", type, function(error, data) {
+  x.domain(data.map(function(d) { return d.date_detail; }));
+  y.domain([0, d3.max(data, function(d) { return d.time_taken; })]);
 
   svg.append("g")
       .attr("class", "x axis")
@@ -121,17 +121,17 @@ d3.csv("timeeStatistics.csv", type, function(error, data) {
       .data(data)
     .enter().append("rect")
       .attr("class", "bar")
-      .attr("x", function(d) { return x(d.name); })
+      .attr("x", function(d) { return x(d.date_detail); })
       .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.value); })
-      .attr("height", function(d) { return height - y(d.value); })
+      .attr("y", function(d) { return y(d.time_taken); })
+      .attr("height", function(d) { return height - y(d.time_taken); })
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
 
 });
 
 function type(d) {
-  d.value = +d.value;
+  d.time_taken = +d.time_taken;
   return d;
 }
 
